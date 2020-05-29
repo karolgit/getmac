@@ -1,0 +1,19 @@
+NAME
+    getmac -- getmacaddress using macaddress.io API
+SYNOPSIS
+    getmac <<macaddress>>
+    getmac --help
+    getmac help 
+DESCRIPTION
+    This tool will get the vendor name of the given macaddres. This tool uses the macaddress.io API to get the vendor information. This tool needs docker to be installed in the host machine.
+EXAMPLES
+    getmac 44:38:39:ff:ef:57 
+SEE ALSO
+    getmacjson, getmaccsv, getmacvendor,getmacxml
+BUGS
+    No Known Bugs. If docker is not installed, this tool will not work.  
+AUTHOR
+    Karol Stuart
+HISTORY
+    getmac version 1.0.0
+    

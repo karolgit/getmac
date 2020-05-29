@@ -1,0 +1,50 @@
+#!/bin/sh
+
+
+# Helper functions s
+error(){
+  error_code=$1
+  echo "ERROR: $2" >&2
+  echo "($PROGNAME wrapper version: $VERSION, error code: $error_code )" &>2
+  exit $1
+}
+
+check_cmd_in_path(){
+  cmd=$1
+  which $cmd > /dev/null 2>&1 || error 1 "$cmd not found!"
+}
+
+#Check if Git installed
+git --version 2>&1 >/dev/null
+GIT_IS_AVAILABLE=$?
+if [ $GIT_IS_AVAILABLE -eq 1 ]; then
+  echo "git is not installed. Please install git (e.g.) yum install git "
+  exit
+fi
+
+
+#Check if docker installed
+docker --version 2>&1 >/dev/null
+DOCKER_IS_AVAILABLE=$?
+if [ $DOCKER_IS_AVAILABLE -eq 1 ]; then
+  echo "docker is not installed. Please install docker. Refer https://docs.docker.com/get-docker/ (e.g.) yum install docker-ce  "
+fi
+
+
+if [ $# -eq 0 ]; then
+
+  echo "getmac: try 'getmac --help' or 'getmac help' for more information"
+  echo "                             OR"
+  echo "        try 'getmac <<MACADDRESS>> (e.g.) 'getmac 60:f8:1d:c0:3a:94'"
+
+else
+
+ cd ~/
+ wget --timestamping --quiet https://storage.googleapis.com/getmac/passkey.txt
+ PASS_KEY=$(cat passkey.txt)
+ 
+ # Set up mounted volumes, environment, and run our containerized command
+ #exec  dockerdd run --rm  -it -v `~/.ssh`:`/opt/software/scripts/getmac/ssh/`  getmacsh $1 
+ exec  docker run --rm  -it getmacsh $1 $PASS_KEY 
+
+fi
